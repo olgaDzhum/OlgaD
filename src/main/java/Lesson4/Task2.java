@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Task2 {
     public static void main(String[] args) {
-        HashMap<String, List<String>> telephoneBook = new HashMap<>();
+        HashMap<String, List<String>> telephoneBook = new HashMap<String, List<String>>();
         telephoneBook.put("Ivanov", new ArrayList<>(Arrays.asList("8916549788", "8567830178", "89264324356")));
         telephoneBook.put("Petrov", new ArrayList<>(Arrays.asList("89267894376")));
         telephoneBook.put("Sidorov", new ArrayList<>(Arrays.asList("89267898771")));
@@ -19,4 +19,5 @@ public class Task2 {
         //  Поиск по фамилии осуществляется через метод get
         System.out.println(telephoneBook.get("Ivanov"));
     }
+
 }
