@@ -15,6 +15,7 @@ public class Task2 {
         System.out.println(telephoneBook);
         System.out.println("===================");
 
+
         //  Поиск по фамилии осуществляется через метод get
         System.out.println(telephoneBook.get("Ivanov"));
     }
