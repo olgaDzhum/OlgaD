@@ -6,12 +6,21 @@ import java.util.Map;
 
 public class Controller {
     WeatherModel weatherModel = new WeatherApp();
+    DataBaseRepository dataBaseRepository = new DataBaseRepository();
+
     Map<Integer, Period> variantResults = new HashMap<>();
 
     public Controller() {
         variantResults.put(1, Period.ONE_DAY);
         variantResults.put(5, Period.FIVE_DAYS);
+
     }
+
+    public void getSavedWeather() {
+
+        dataBaseRepository.getSavedWeather();
+    }
+
 
     public void getWeather(String days, String city) throws IOException {
         Integer integerDay = Integer.parseInt(days);

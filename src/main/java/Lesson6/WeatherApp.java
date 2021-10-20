@@ -18,7 +18,7 @@ public class WeatherApp implements WeatherModel {
   public static final String DAILY = "daily";
   public static final String FIVE_DAYS = "5day";
   public static final String ONE_DAY = "1day";
-  public static final String API_KEY = "v7LRCuG1rIqYj7kclmAGJ7wsllKIUgXq";
+  public static final String API_KEY = "lm7ZgwRvuJKFAkEAHBKyThpowprk3PyK";
   public static final String CITY_CODE_MOSCOW = "294021";
   public static final String LOCATIONS = "locations";
   public static final String CITIES = "cities";
@@ -41,20 +41,19 @@ public class WeatherApp implements WeatherModel {
               .addPathSegment(FIVE_DAYS)
               .addPathSegment(getCityCode(city))
               .addQueryParameter("apikey", API_KEY)
-              //    .addQueryParameter("language",LANGUAGE_RU)
               .addQueryParameter("metric", "true")
               .build();
 
-      System.out.println("Ccылка на прогноз погоды: ");
-      System.out.println(httpUrl.toString());
-      System.out.println();
+      // System.out.println("Ccылка на прогноз погоды: ");
+      //System.out.println(httpUrl.toString());
+      //System.out.println();
       Request request = new Request.Builder()
               .url(httpUrl)
               .build();
       Response response = okHttpClient.newCall(request).execute();
       String responseBody = response.body().string();
-      System.out.println(responseBody);
-      System.out.println();
+      // System.out.println(responseBody);
+      // System.out.println();
 
       String date1 = objectMapper.readTree(responseBody).at("/DailyForecasts").get(0).at("/Date").asText();
       String date2 = objectMapper.readTree(responseBody).at("/DailyForecasts").get(1).at("/Date").asText();
@@ -72,12 +71,25 @@ public class WeatherApp implements WeatherModel {
       Integer temperature4 = objectMapper.readTree(responseBody).at("/DailyForecasts").get(3).at("/Temperature/Maximum/Value").asInt();
       Integer temperature5 = objectMapper.readTree(responseBody).at("/DailyForecasts").get(4).at("/Temperature/Maximum/Value").asInt();
 
-      System.out.println("On the " + date1 + " in " + city + " is " + weatherText1 + " with the maximum temperature " + temperature1 + "C.");
-      System.out.println("On the " + date2 + " in " + city + " is " + weatherText2 + " with the maximum temperature " + temperature2 + "C.");
-      System.out.println("On the " + date3 + " in " + city + " is " + weatherText3 + " with the maximum temperature " + temperature3 + "C.");
-      System.out.println("On the " + date4 + " in " + city + " is " + weatherText4 + " with the maximum temperature " + temperature4 + "C.");
-      System.out.println("On the " + date5 + " in " + city + " is " + weatherText5 + " with the maximum temperature " + temperature5 + "C.");
+      Weather weather1 = new Weather(date1, city, weatherText1, temperature1);
+      Weather weather2 = new Weather(date2, city, weatherText2, temperature2);
+      Weather weather3 = new Weather(date3, city, weatherText3, temperature3);
+      Weather weather4 = new Weather(date4, city, weatherText4, temperature4);
+      Weather weather5 = new Weather(date5, city, weatherText5, temperature5);
 
+      System.out.println(weather1.toString());
+      System.out.println(weather2.toString());
+      System.out.println(weather3.toString());
+      System.out.println(weather4.toString());
+      System.out.println(weather5.toString());
+      System.out.println("===================================================");
+
+      DataBaseRepository dataBaseRepository = new DataBaseRepository();
+      dataBaseRepository.saveWeather(weather1);
+      dataBaseRepository.saveWeather(weather2);
+      dataBaseRepository.saveWeather(weather3);
+      dataBaseRepository.saveWeather(weather4);
+      dataBaseRepository.saveWeather(weather5);
 
     }
     if (period == Period.ONE_DAY) {
@@ -91,24 +103,27 @@ public class WeatherApp implements WeatherModel {
               .addPathSegment(ONE_DAY)
               .addPathSegment(getCityCode(city))
               .addQueryParameter("apikey", API_KEY)
-              //       .addQueryParameter("Language",LANGUAGE_RU)
               .addQueryParameter("metric", "true")
               .build();
 
-      System.out.println("Ccылка на прогноз погоды: ");
-      System.out.println(httpUrl.toString());
-      System.out.println();
+      // System.out.println("Ccылка на прогноз погоды: ");
+      // System.out.println(httpUrl.toString());
+      // System.out.println();
       Request request = new Request.Builder()
               .url(httpUrl)
               .build();
       Response response = okHttpClient.newCall(request).execute();
       String responseBody = response.body().string();
-      System.out.println(responseBody);
+      // System.out.println(responseBody);
+      String date = objectMapper.readTree(responseBody).at("/Headline/EffectiveDate").asText();
       String weatherText = objectMapper.readTree(responseBody).at("/Headline/Text").asText();
       Integer temperature = objectMapper.readTree(responseBody).at("/DailyForecasts").get(0).at("/Temperature/Maximum/Value").asInt();
-      //
-      System.out.println(city + " " + weatherText + "with maximum temperature " + temperature + "C degrees.");
 
+      Weather weather = new Weather(date, city, weatherText, temperature);
+      System.out.println(weather.toString());
+      System.out.println("===================================================");
+      DataBaseRepository dataBaseRepository = new DataBaseRepository();
+      dataBaseRepository.saveWeather(weather);
 
     }
 
@@ -143,6 +158,7 @@ public class WeatherApp implements WeatherModel {
     String cityKey = objectMapper.readTree(responseBody).get(0).at("/Key").asText();
     return cityKey;
   }
+
 
 
 }

@@ -20,10 +20,19 @@ public class UserInterfaceView {
 
             try {
                 controller.getWeather(scannerDays, scannerCity);
+                System.out.println("To get SAVED WEATHER press w ");
                 System.out.println(" To EXIT press 0");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            String seeTable = scanner.nextLine();
+            if (seeTable.equals("w")) {
+                controller.getSavedWeather();
+                break;
+            }
+
+
             String line = scanner.nextLine();
             if (line.equals("0"))
                 break;
